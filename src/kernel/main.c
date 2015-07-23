@@ -8,10 +8,12 @@
 #include "type.h"
 #include "const.h"
 #include "protect.h"
-#include "proto.h"
 #include "string.h"
 #include "proc.h"
+#include "tty.h"
+#include "console.h"
 #include "global.h"
+#include "proto.h"
 
 
 /*======================================================================*
@@ -20,9 +22,6 @@
 PUBLIC int kernel_main()
 {
 	disp_str("-----\"kernel_main\" begins-----\n");
-
-currentProcess=-1;
-nextSchedual=0;
 
 	TASK*		p_task		= task_table;
 	PROCESS*	p_proc		= proc_table;
@@ -64,119 +63,21 @@ nextSchedual=0;
 		selector_ldt += 1 << 3;
 	}
 
-
-	queues[0] = queue0;
-	queues[1] = queue1;
-	queues[2] = queue2;
-	indice[0] = index0;
-	indice[1] = index1;
-	indice[2] = index2;
-	head[0] = -1;
-	head[1] = -1;
-	head[2] = -1;
-
-	for (i = 0; i < NR_TASKS; i++)
-	{
-		indice[0][i] = -2;
-		indice[1][i] = -2;
-		indice[2][i] = -2;
-	}
-	for (i = 0; i < 3; i++)
-	{
-		queues[i][0].arr = 0; queues[i][0].priority = 1; queues[i][0].remaining = 70;
-		queues[i][1].arr = 0; queues[i][1].priority = 3; queues[i][1].remaining = 55;
-		queues[i][2].arr = 10; queues[i][2].priority = 2; queues[i][2].remaining = 65;
-		queues[i][3].arr = 5; queues[i][3].priority = 0; queues[i][3].remaining = 60;
-		queues[i][4].arr = 55; queues[i][4].priority = 1; queues[i][4].remaining = 12;
-	}
-	proc_table[0].arr = 0; proc_table[0].priority = 1; proc_table[0].remaining = 70;
-	proc_table[1].arr = 0; proc_table[1].priority = 3; proc_table[1].remaining = 55;
-	proc_table[2].arr = 10; proc_table[2].priority = 2; proc_table[2].remaining = 65;
-	proc_table[3].arr = 5; proc_table[3].priority = 0; proc_table[3].remaining = 60;
-	proc_table[4].arr = 55; proc_table[4].priority = 1; proc_table[4].remaining = 12;
-
 	k_reenter = 0;
 	ticks = 0;
-
+        shot_num=-1;
+        is_shot=1;
+        game_target=0x01;
 	p_proc_ready	= proc_table;
 
-        /* 初始化 8253 PIT */
-        out_byte(TIMER_MODE, RATE_GENERATOR);
-        out_byte(TIMER0, (u8) (TIMER_FREQ/HZ) );
-        out_byte(TIMER0, (u8) ((TIMER_FREQ/HZ) >> 8));
-
-        put_irq_handler(CLOCK_IRQ, clock_handler); /* 设定时钟中断处理程序 */
-        enable_irq(CLOCK_IRQ);                     /* 让8259A可以接收时钟中断 */
+	init_clock();
+        init_keyboard();
 
 	restart();
+
+
 
 	while(1){}
 }
 
-/*======================================================================*
-                               TestA
- *======================================================================*/
-void TestA()
-{
-	int i = 0;
-	while (1) {
-if(ticks!=0&&nextSchedual>=ticks){
-		disp_str("A");milli_delay(5);
-}
-		
-	}
-}
 
-/*======================================================================*
-                               TestB
- *======================================================================*/
-void TestB()
-{
-	int i = 0x1000;
-	while(1){
-if(ticks!=0&&nextSchedual>=ticks){
-		disp_str("B");milli_delay(5);
-}
-		
-	}
-}
-
-/*======================================================================*
-                               TestC
- *======================================================================*/
-void TestC()
-{
-	int i = 0x2000;
-	while(1){
-if(ticks!=0&&nextSchedual>=ticks){
-		disp_str("C");milli_delay(10);
-}
-		
-	}
-}
-/*======================================================================*
-                               TestD
- *======================================================================*/
-void TestD()
-{
-	int i = 0x3000;
-	while(1){
-if(ticks!=0&&nextSchedual>=ticks){
-		disp_str("D");milli_delay(10);
-}
-		
-	}
-}
-/*======================================================================*
-                               TestE
- *======================================================================*/
-void TestE()
-{
-	int i = 0x4000;
-	while(1){
-if(ticks!=0&&nextSchedual>=ticks){
-		disp_str("E");milli_delay(10);
-}
-		
-	}
-}

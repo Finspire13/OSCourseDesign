@@ -13,6 +13,11 @@
 
 EXTERN	int		ticks;
 
+EXTERN	int		shot_num;    //打中的地鼠
+EXTERN	int		game_start_tick;    //游戏开始时间
+EXTERN  int            is_shot;
+EXTERN  u8              game_target;
+
 EXTERN	int		disp_pos;
 EXTERN	u8		gdt_ptr[6];	// 0~15:Limit  16~47:Base
 EXTERN	DESCRIPTOR	gdt[GDT_SIZE];
@@ -24,22 +29,13 @@ EXTERN	u32		k_reenter;
 EXTERN	TSS		tss;
 EXTERN	PROCESS*	p_proc_ready;
 
+EXTERN	int		nr_current_console;
+
 extern	PROCESS		proc_table[];
 extern	char		task_stack[];
 extern  TASK            task_table[];
 extern	irq_handler	irq_table[];
+extern	TTY		tty_table[];
+extern  CONSOLE         console_table[];
 
-extern PROCESS queue0[NR_TASKS];
-extern PROCESS queue1[NR_TASKS];
-extern PROCESS queue2[NR_TASKS];
-extern PROCESS* queues[3];
-
-extern int index0[NR_TASKS];
-extern int index1[NR_TASKS];
-extern int index2[NR_TASKS];
-extern int* indice[3];
-extern int head[3];
-
-extern int currentProcess;
-extern int nextSchedual;
 
