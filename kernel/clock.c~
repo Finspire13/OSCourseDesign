@@ -37,7 +37,7 @@ disp_str("                              4. F11:Show Current Directory           
 disp_str("                            5.  F12:Show Current Date                       ");
 disp_str("                                6. Ctrl:Show Process Management                       ");
 disp_str("                                                                                                                  ");
-disp_str("                                                                        ");
+disp_str("                                                                        !");
 }
 
 	ticks++;

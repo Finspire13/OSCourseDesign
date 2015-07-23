@@ -98,6 +98,12 @@ PUBLIC void keyboard_read(TTY* p_tty)
 		code_with_E0 = 0;
 
 		scan_code = get_byte_from_kbuf();
+   
+                             if(shot_num>=0&&scan_code==game_target)
+                             {
+                             	is_shot=1;
+                             }
+                          
 
 		/* 下面开始解析扫描码 */
 		if (scan_code == 0xE1) {

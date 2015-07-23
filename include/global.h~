@@ -15,7 +15,7 @@ EXTERN	int		ticks;
 
 EXTERN	int		shot_num;    //打中的地鼠
 EXTERN	int		game_start_tick;    //游戏开始时间
-EXTERN  int            is_shot;
+EXTERN  bool            is_shot;
 EXTERN  u8              game_target;
 
 EXTERN	int		disp_pos;
